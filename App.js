@@ -36,7 +36,7 @@ class App extends React.Component {
 
   getPhotoDetails = async() => {
     let page = this.state.pagesLoaded + 1;
-    if (page <= 10) {
+    if (page <= 10) {                    // maximum 100 photos may be loaded
       let photos = await photosByPage(page);
       let newPhotoArr = this.state.photoArr;
       photos.forEach(photo => {
@@ -58,17 +58,16 @@ class App extends React.Component {
   buildGallery = () => {
     const gallery = this.state.photoArr.map(photo => {
       return (
-          <TouchableWithoutFeedback key={photo.id} onPress={() => this.setModalVisible(true, photo.urls.raw)}>
-            <View style={styles.imageContainer}>
-              <Image
-                source={{uri: photo.urls.raw}}
-                style={styles.image}
-              />
-              <Text style={styles.imageText}>id: {photo.id}</Text>
-              <Text style={styles.imageText}>author: {photo.username}</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        
+        <TouchableWithoutFeedback key={photo.id} onPress={() => this.setModalVisible(true, photo.urls.raw)}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{uri: photo.urls.raw}}
+              style={styles.image}
+            />
+            <Text style={styles.imageText}>id: {photo.id}</Text>
+            <Text style={styles.imageText}>author: {photo.username}</Text>
+          </View>
+        </TouchableWithoutFeedback>
       );
     });
     this.setState({
@@ -80,32 +79,32 @@ class App extends React.Component {
     const gallery = this.state.gallery;
     const modalVisible = this.state.modalVisible;
     return (
-        <View style={{flex: 1}}>
-         <View style={styles.button}>
-           <TouchableNativeFeedback onPress={this.getPhotoDetails}>
-             <Text style={styles.text}>+</Text>
-           </TouchableNativeFeedback>
-         </View>
-         <ScrollView>
-           <View style={styles.scroll}>
-             <Modal
-              style={styles.modal}
-              animationType={'fade'}
-              transparent={true}
-              visible={modalVisible}
+      <View style={{flex: 1}}>
+       <View style={styles.button}>
+         <TouchableNativeFeedback onPress={this.getPhotoDetails}>
+           <Text style={styles.text}>+</Text> {/* loads 10 photos per click (1 page from unsplash) */}
+         </TouchableNativeFeedback>
+       </View>
+       <ScrollView>
+         <View style={styles.scroll}>
+           <Modal
+            style={styles.modal}
+            animationType={'fade'}
+            transparent={true}
+            visible={modalVisible}
             >
-              <View style={styles.modal}>
-                <ImageBackground source={{uri: this.state.modalImage}} resizeMode='contain' style={{width: '100%', height: '100%'}}>
-                  <Text style={styles.modalText} onPress={() => this.setModalVisible(false)}>
-                    Close
-                  </Text>
-                </ImageBackground>
-              </View>
-             </Modal>
-             {gallery}
-           </View>
-         </ScrollView>
-        </View>
+            <View style={styles.modal}>
+              <ImageBackground source={{uri: this.state.modalImage}} resizeMode='contain' style={{width: '100%', height: '100%'}}>
+                <Text style={styles.modalText} onPress={() => this.setModalVisible(false)}>
+                  Close
+                </Text>
+              </ImageBackground>
+            </View>
+           </Modal>
+           {gallery}
+         </View>
+       </ScrollView>
+      </View>
     );
   }
 };
